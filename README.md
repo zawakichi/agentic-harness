@@ -18,3 +18,7 @@ Codex の Plugin としてローカルからインストールします。Hook �
 ## 構成
 
 `.codex-plugin/plugin.json` と `.claude-plugin/plugin.json` は各ホストの Plugin 定義、`skills/` と `hooks/` は両者で共有する実装です。Hook スクリプトの実行には Python 3 が必要です。
+
+## Docker Sandboxes
+
+Docker Sandboxes と static mode の MCP Gateway を使う方針です。導入手順、Codex の起動時の注意、権限の境界は [Docker Sandboxes の手順](docs/docker-sandboxes.md)を参照してください。
