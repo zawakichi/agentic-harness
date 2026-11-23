@@ -1,0 +1,7 @@
+{
+  "name": "agentic-harness",
+  "version": "0.1.0",
+  "description": "Run bounded autonomous coding tasks with explicit verification.",
+  "author": {"name": "zawakichi"},
+  "skills": "./skills/"
+}
