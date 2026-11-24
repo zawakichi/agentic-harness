@@ -33,3 +33,17 @@ static mode でもホストから後でサーバーを追加できます。名�
 ## 権限の境界
 
 直接共有した workspace への変更はホストに即時反映されます。対象リポジトリだけを共有し、必要に応じて clone mode を使います。MCP ツールはそのサーバーに与えられた権限で外部操作を行えます。ローカル stdio サーバーはホスト上で動くため、VM の内側に閉じ込められているとは限りません。GitHub 等には必要なリポジトリと操作に絞った認証情報を使い、ネットワークと MCP 権限を個別に確認します。
+
+## 動作確認の例
+
+認証不要の OpenAI Docs MCP で、Gateway と static mode の接続を確認できます。
+
+```sh
+sbx mcp add openai-docs --url https://developers.openai.com/mcp
+sbx mcp load openai-docs --sandbox agentic-harness-auth-test
+sbx inspect agentic-harness-auth-test
+```
+
+2026-11-24 に `sbx` v0.54.0 と Codex CLI 0.171.0 の組み合わせで、clone mode の Sandbox から OpenAI Docs MCP の検索と本文取得を確認しました。`sbx create` の前に `sbx secret set openai --oauth` で認証を設定した環境で確認しています。
+
+GitHub のリモート MCP は、自動 OAuth クライアント登録が提供されず、`sbx mcp add` がクライアント ID を要求したため、現時点では未接続です。`--skip-auth` と Authorization ヘッダーを指定しても同じ登録エラーが出たため、この組み合わせは未検証です。
