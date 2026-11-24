@@ -9,11 +9,18 @@ Skill はエージェントへの指示であり、検証成功を強制する�
 
 ## Claude Code で試す
 
-リポジトリを clone し、対象プロジェクトから `claude --plugin-dir /path/to/agentic-harness` で起動します。`/autonomous-run` を明示してタスクを依頼することもできます。
+リポジトリを clone し、対象プロジェクトから `claude --plugin-dir /path/to/agentic-harness` で起動します。`/agentic-harness:autonomous-run` を明示してタスクを依頼することもできます。
 
 ## Codex で使う
 
-Codex の Plugin としてローカルからインストールします。Hook は手動インストールされた Codex desktop Plugin でサポートされ、実行前に内容の確認と信頼が必要です。詳細は [Plugin のパッケージング](https://developers.openai.com/plugins/build/plugins) を参照してください。
+Codex CLI では Marketplace を登録して Plugin をインストールできます。
+
+```sh
+codex plugin marketplace add zawakichi/agentic-harness
+codex plugin add agentic-harness@agentic-harness
+```
+
+ネットワーク利用不可の場合、clone 済みのリポジトリからも `codex plugin marketplace add /path/to/agentic-harness` で登録できます。Hook は手動インストールされた Codex desktop Plugin でサポートされ、実行前に内容の確認と信頼が必要です。CLI 内での Hook 実行は未検証です。詳細は [Plugin のパッケージング](https://developers.openai.com/plugins/build/plugins) を参照してください。
 
 ## 構成
 
