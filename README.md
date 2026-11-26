@@ -1,31 +1,42 @@
 # Agentic Harness
 
-Codex と Claude Code 向けの、自律的な作業を支援する Plugin の初期版です。共通の Skill と SessionStart Hook で構成します。
+Codex と Claude Code 向けの、品質属性に基づく自律作業 Plugin です。エージェントに具体的な工程を強制せず、仕様の正本・機能契約・独立検証・人間の理解可能性を守りながら、要求された品質を合理的なコストで実現することを目指します。
 
-- `autonomous-run` Skill: 受け入れ条件の設定、実装、検証、失敗からの修正、結果報告を指示します。
-- SessionStart Hook: 自律実行が求められた際に Skill を参照するよう、セッションに短いコンテキストを追加します。
+## 設計と判断
 
-Skill はエージェントへの指示であり、検証成功を強制するランタイムや、セッションを再開するスケジューラではありません。権限、承認、セッションの寿命は各ホストの設定に従います。
+6 つの原則は Quality Attribute Driven、Semantic Integrity、Human Understandability、Agent Autonomy、Independent Verifiability、Evolution Adaptability です。適用方法、Plugin の事前条件・不変条件・事後条件、セキュリティ境界は [設計の正本](docs/design.md) にあります。作業指針の正本は [autonomous-run Skill](skills/autonomous-run/SKILL.md) です。導入先の既存仕様・受入基準・権限設定は置き換えません。
 
-## Claude Code で試す
+参考実装から、品質シナリオ、機能契約、アーキテクチャ判断、ハーネス評価の様式と実行例を採用しました。QAW・ADD・ATAM・CBAM は必要に応じて利用し、全タスクに工程や文書の作成を強制しません。例は契約の説明用であり、本番の認可実装ではありません。
 
-リポジトリを clone し、対象プロジェクトから `claude --plugin-dir /path/to/agentic-harness` で起動します。`/agentic-harness:autonomous-run` を明示してタスクを依頼することもできます。
+既存の Skill と SessionStart Hook は両方維持しています。Hook は Skill の存在を知らせるだけで、制御・認可・検証を強制しません。参考実装の AGENTS.md や空のプロジェクト仕様を導入先へ自動配置しないのは、既存の正本や指示を重複・上書きしないためです。Hook と Skill の効果は未測定であり、[評価計画](docs/evaluation.md)に基づいて測定し、モデル進化時に見直します。
 
-## Codex で使う
+## インストール
 
-Codex CLI では Marketplace を登録して Plugin をインストールできます。
+### Codex
 
 ```sh
 codex plugin marketplace add zawakichi/agentic-harness
 codex plugin add agentic-harness@agentic-harness
 ```
 
-ネットワーク利用不可の場合、clone 済みのリポジトリからも `codex plugin marketplace add /path/to/agentic-harness` で登録できます。Hook は手動インストールされた Codex desktop Plugin でサポートされ、実行前に内容の確認と信頼が必要です。CLI 内での Hook 実行は未検証です。詳細は [Plugin のパッケージング](https://developers.openai.com/plugins/build/plugins) を参照してください。
+clone 済みの場合は Marketplace の引数にローカルのリポジトリパスを使えます。Codex の Hook はホストの対応と信頼設定が必要です。Sandbox 内の Plugin 読み込みと Hook 実行は未検証です。
 
-## 構成
+### Claude Code
 
-`.codex-plugin/plugin.json` と `.claude-plugin/plugin.json` は各ホストの Plugin 定義、`skills/` と `hooks/` は両者で共有する実装です。Hook スクリプトの実行には Python 3 が必要です。
+clone 済みの Plugin を `claude --plugin-dir /path/to/agentic-harness` で読み込みます。`/agentic-harness:autonomous-run` で Skill を指定できます。実際のセッションでの Skill と Hook の実行は未検証です。
 
-## Docker Sandboxes
+## 検証
 
-Docker Sandboxes と static mode の MCP Gateway を使う方針です。導入手順、Codex の起動時の注意、権限の境界は [Docker Sandboxes の手順](docs/docker-sandboxes.md)を参照してください。
+Python 3.10 以上で次を実行します。Plugin の定義と Hook の出力を確認し、別途、参考実装の機能契約に対する小さな実行例を検証します。
+
+```sh
+python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s examples/document-delete -v
+claude plugin validate .
+```
+
+これらはホストへの Plugin 読み込み、モデルの行動、安全性や有効性の証明ではありません。独立した基準と比較実験の方法は [評価計画](docs/evaluation.md) を参照してください。
+
+## 実行環境
+
+Docker Sandboxes と static mode の MCP Gateway を利用する方針です。[導入手順と権限の境界](docs/docker-sandboxes.md)を参照してください。Skill と Hook は Sandbox、CI、承認、権限制御の代わりにはなりません。
