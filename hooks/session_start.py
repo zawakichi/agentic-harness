@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Supply lightweight context; the skill provides the detailed workflow."""
+"""Advertise the optional autonomous workflow without enforcing a process."""
 import json
 
 print(json.dumps({"hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "For tasks requesting autonomous execution, use the autonomous-run skill if available. Define acceptance criteria, verify results, and report blockers honestly. Respect the user's instructions and the environment's permissions."
+    "additionalContext": "For autonomous engineering work, the autonomous-run skill provides optional quality, contract and verification guidance. Follow the user's instructions and host permissions."
 }}))
